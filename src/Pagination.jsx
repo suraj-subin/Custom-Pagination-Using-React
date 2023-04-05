@@ -1,23 +1,30 @@
 import { Icon } from "@iconify/react";
 import React, { useEffect, useState } from "react";
-import "./App.css";
+import "./Pagination.css";
 import { Button } from "@mui/material";
-const App = () => {
+import axios from "axios";
+
+const Pagination = () => {
   const [userData, setUserData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
   const APIURL = "https://jsonplaceholder.typicode.com/posts";
 
+  const ApiData = async () => {
+    try {
+      const Res = await axios.get(APIURL);
+      setUserData(Res.data);
+      setTotalPages(Math.ceil(Res.data.length / 20));
+    } catch (error) {
+      // Error Message
+    }
+  };
+
   useEffect(() => {
-    fetch(APIURL)
-      .then((res) => res.json())
-      .then((data) => {
-        setUserData(data);
-        setTotalPages(Math.ceil(data.length / 5));
-      });
+    ApiData();
   }, []);
-  // current pages function
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -79,4 +86,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Pagination;
